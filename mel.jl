@@ -7,7 +7,7 @@ function create_mel_spectrogram(input_path::String, output_path::String)
 
  
     window_length = nextpow(2, ceil(Int, .04 * sampling_frequency))  # 40 ms window
-    hop_length = div(window_length,10)  # 50% overlap
+    hop_length = div(window_length,10)  
 
 
     mag, phase, freq, fs = stft(input_path, window_length, hop_length, "hamming")
