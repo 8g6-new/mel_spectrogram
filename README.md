@@ -34,9 +34,9 @@ Generate a bank of triangular filters mapped to the Mel scale, which is used to 
 
 #### Steps:
 1. Convert frequency range to the Mel scale using:
-   \[
-   \text{Mel} = 2595 \cdot \log_{10}(1 + \frac{f}{700})
-   \]
+   <div style="text-align:center;">
+   <img src="https://github.com/user-attachments/assets/3348d0a7-9847-4d6e-9fe0-280d55bc8d32" alt="Mel Scale Formula" style="width:400px;"/>
+   </div>
 2. Compute frequency points for the filters and map them to FFT bin indices.
 3. Create triangular filters by linearly interpolating between the filter's start, center, and end points.
 
@@ -55,10 +55,22 @@ Generate and apply a window function to minimize spectral leakage.
 - `window_values`: An array containing the window's values.
 
 #### Supported Windows:
-1. **Hann**: $$ ![image](https://github.com/user-attachments/assets/55d3dfb4-1f7a-4ffe-bf27-a95f72e89b46)
-2. **Hamming**: ![image](https://github.com/user-attachments/assets/18b4c77f-6627-4d01-a5dc-295f7b54c7ad)
-3. **Blackman**: ![image](https://github.com/user-attachments/assets/fb9e9178-9287-4d16-822a-04af8148fb67)
-4. **Gaussian**: ![image](https://github.com/user-attachments/assets/af244b5a-4506-4103-bdc7-5ca8bffba618)
+1. **Hann**: 
+   <div style="text-align:center;">
+   <img src="https://github.com/user-attachments/assets/55d3dfb4-1f7a-4ffe-bf27-a95f72e89b46" alt="Hann Window" style="width:400px;"/>
+   </div>
+2. **Hamming**: 
+   <div style="text-align:center;">
+   <img src="https://github.com/user-attachments/assets/18b4c77f-6627-4d01-a5dc-295f7b54c7ad" alt="Hamming Window" style="width:400px;"/>
+   </div>
+3. **Blackman**: 
+   <div style="text-align:center;">
+   <img src="https://github.com/user-attachments/assets/fb9e9178-9287-4d16-822a-04af8148fb67" alt="Blackman Window" style="width:400px;"/>
+   </div>
+4. **Gaussian**: 
+   <div style="text-align:center;">
+   <img src="https://github.com/user-attachments/assets/af244b5a-4506-4103-bdc7-5ca8bffba618" alt="Gaussian Window" style="width:400px;"/>
+   </div>
 
 ---
 
@@ -77,47 +89,4 @@ Perform the Short-Time Fourier Transform (STFT) to analyze a signal's frequency 
 - `mag`: Magnitude of the FFT.
 - `phase`: Phase of the FFT.
 - `freq`: Frequency bins.
-- `fs`: Sampling frequency of the audio file.
-
-#### Steps:
-1. Divide the signal into overlapping windows.
-2. Apply a window function to each segment.
-3. Compute the FFT for each window.
-4. Extract magnitude and phase from the FFT output.
-
----
-
-### 4. `create_mel_spectrogram`
-
-#### Purpose:
-Generate and save a Mel spectrogram from an audio file.
-
-#### Arguments:
-- `input_path::String`: Path to the input audio file.
-- `output_path::String`: Path to save the generated Mel spectrogram image.
-
-#### Returns:
-- None (saves the spectrogram as an image).
-
-#### Steps:
-1. Load the audio file and extract data and sampling frequency.
-2. Define window and hop lengths based on the sampling rate.
-3. Perform STFT to obtain the spectrogram.
-4. Generate a Mel filterbank.
-5. Apply the filterbank to the power spectrogram to create a Mel spectrogram.
-6. Convert to decibel (dB) scale:
-   \[
-   \text{Mel Spectrogram (dB)} = 10 \cdot \log_{10}(\text{Mel Spectrogram} + 1e-7)
-   \]
-7. Visualize and save the spectrogram using a heatmap.
-
----
-
-## Example Usage
-
-```julia
-# Generate a Mel spectrogram for an audio file
-create_mel_spectrogram(
-    "./sep/test/Black Woodpecker/0.wav_1.wav",
-    "./output_mel_spectrogram.png"
-)
+- `fs`: Sampling frequency of the audio file
