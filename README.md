@@ -55,7 +55,7 @@ Generate and apply a window function to minimize spectral leakage.
 - `window_values`: An array containing the window's values.
 
 #### Supported Windows:
-1. **Hann**: \( 0.5 \cdot (1 - \cos(\frac{2\pi n}{N-1})) \)
+1. **Hann**: $$ \( 0.5 \cdot (1 - \cos(\frac{2\pi n}{N-1})) \ ) $$
 2. **Hamming**: \( 0.54 - 0.46 \cdot \cos(\frac{2\pi n}{N-1}) \)
 3. **Blackman**: \( 0.42 - 0.5 \cdot \cos(\frac{2\pi n}{N-1}) + 0.08 \cdot \cos(\frac{4\pi n}{N-1}) \)
 4. **Gaussian**: \( e^{-\frac{1}{2} \left(\frac{n-N/2}{\sigma \cdot N/2}\right)^2} \)
