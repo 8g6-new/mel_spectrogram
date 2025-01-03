@@ -1,77 +1,119 @@
-"""
 # Julia Audio Processing Library
 
-This library provides functionality for processing audio files, including 
-Short-Time Fourier Transform (STFT), Mel filterbank creation, and Mel spectrogram generation. 
-It supports various window functions for spectral analysis.
+This library processes audio files to generate spectrograms and Mel spectrograms, providing tools for spectral analysis and audio visualization. It includes implementations of various window functions, a Short-Time Fourier Transform (STFT) routine, and Mel filterbanks.
+
+---
+
+## Overview
+
+### Core Concepts
+1. **Mel Scale**: The Mel scale approximates human auditory perception of pitch, emphasizing frequencies in the range where humans are most sensitive. This scale is used in speech and audio processing for tasks like speech recognition and audio feature extraction.
+   
+2. **Windowing**: In signal processing, window functions reduce spectral leakage by tapering the signal at the edges before applying FFT. This script supports multiple window functions, each optimized for different signal properties.
+
+3. **Short-Time Fourier Transform (STFT)**: STFT computes the Fourier transform over successive overlapping windows, converting a signal from the time domain to a time-frequency representation.
+
+4. **Mel Spectrogram**: A Mel spectrogram applies a filterbank to the power spectrum, mapping frequencies to the Mel scale. It is a common input for machine learning models in audio processing.
+
+---
 
 ## Functions
 
-### `mel_filterbank`
+### 1. `mel_filterbank`
 
-Generate a Mel filterbank.
+#### Purpose:
+Generate a bank of triangular filters mapped to the Mel scale, which is used to transform frequency-domain signals into the Mel scale.
 
 #### Arguments:
-- `num_filters::Int`: The number of Mel filters to generate.
-- `fft_size::Int`: The size of the FFT used for spectral analysis.
-- `sample_rate::Float32`: The sampling rate of the audio signal.
+- `num_filters::Int`: Number of Mel filters.
+- `fft_size::Int`: Size of the FFT used.
+- `sample_rate::Float32`: Sampling rate of the audio file.
 
 #### Returns:
-- A 2D matrix representing the Mel filterbank.
-
----
-
-### `apply_window_function`
-
-Generate a window function to reduce spectral leakage in FFT analysis.
-
-#### Arguments:
-- `window_size::Int`: The size of the window.
-- `window_type::String`: The type of window function (e.g., "hann", "hamming", "blackman", etc.).
-
-#### Returns:
-- A 1D array containing the window values.
-
----
-
-### `stft`
-
-Perform the Short-Time Fourier Transform on an audio file.
-
-#### Arguments:
-- `file_path::String`: The path to the audio file.
-- `window_size::Int`: The size of the analysis window.
-- `hop_size::Int`: The number of samples between successive windows.
-- `window_type::String`: The type of window function to apply (default: "hamming").
-
-#### Returns:
-- `mag`: The magnitude of the FFT for each time frame.
-- `phase`: The phase of the FFT for each time frame.
-- `freq`: The frequency bins corresponding to the FFT output.
-- `fs`: The sampling rate of the audio file.
-
----
-
-### `create_mel_spectrogram`
-
-Generate a Mel spectrogram from an audio file and save it as an image.
-
-#### Arguments:
-- `input_path::String`: Path to the input WAV file.
-- `output_path::String`: Path where the Mel spectrogram image will be saved.
+- `filterbank`: A `num_filters x (fft_size ÷ 2 + 1)` matrix representing the Mel filterbank.
 
 #### Steps:
-1. Load the audio file using `wavread`.
-2. Calculate the window length and hop length based on the sampling rate.
-3. Perform STFT using the `stft` function.
-4. Create a Mel filterbank using `mel_filterbank`.
-5. Compute the power spectrogram and transform it to the Mel scale.
-6. Convert the Mel spectrogram to decibels (dB).
-7. Plot and save the Mel spectrogram as an image.
+1. Convert frequency range to the Mel scale using:
+   \[
+   \text{Mel} = 2595 \cdot \log_{10}(1 + \frac{f}{700})
+   \]
+2. Compute frequency points for the filters and map them to FFT bin indices.
+3. Create triangular filters by linearly interpolating between the filter's start, center, and end points.
 
 ---
 
-## Example Usage:
+### 2. `apply_window_function`
+
+#### Purpose:
+Generate and apply a window function to minimize spectral leakage.
+
+#### Arguments:
+- `window_size::Int`: Size of the analysis window.
+- `window_type::String`: Type of window function (`"hann"`, `"hamming"`, `"blackman"`, etc.).
+
+#### Returns:
+- `window_values`: An array containing the window's values.
+
+#### Supported Windows:
+1. **Hann**: \( 0.5 \cdot (1 - \cos(\frac{2\pi n}{N-1})) \)
+2. **Hamming**: \( 0.54 - 0.46 \cdot \cos(\frac{2\pi n}{N-1}) \)
+3. **Blackman**: \( 0.42 - 0.5 \cdot \cos(\frac{2\pi n}{N-1}) + 0.08 \cdot \cos(\frac{4\pi n}{N-1}) \)
+4. **Gaussian**: \( e^{-\frac{1}{2} \left(\frac{n-N/2}{\sigma \cdot N/2}\right)^2} \)
+
+---
+
+### 3. `stft`
+
+#### Purpose:
+Perform the Short-Time Fourier Transform (STFT) to analyze a signal's frequency content over time.
+
+#### Arguments:
+- `file_path::String`: Path to the input WAV file.
+- `window_size::Int`: Size of each analysis window.
+- `hop_size::Int`: Step size between successive windows.
+- `window_type::String`: Type of window function (default: `"hamming"`).
+
+#### Returns:
+- `mag`: Magnitude of the FFT.
+- `phase`: Phase of the FFT.
+- `freq`: Frequency bins.
+- `fs`: Sampling frequency of the audio file.
+
+#### Steps:
+1. Divide the signal into overlapping windows.
+2. Apply a window function to each segment.
+3. Compute the FFT for each window.
+4. Extract magnitude and phase from the FFT output.
+
+---
+
+### 4. `create_mel_spectrogram`
+
+#### Purpose:
+Generate and save a Mel spectrogram from an audio file.
+
+#### Arguments:
+- `input_path::String`: Path to the input audio file.
+- `output_path::String`: Path to save the generated Mel spectrogram image.
+
+#### Returns:
+- None (saves the spectrogram as an image).
+
+#### Steps:
+1. Load the audio file and extract data and sampling frequency.
+2. Define window and hop lengths based on the sampling rate.
+3. Perform STFT to obtain the spectrogram.
+4. Generate a Mel filterbank.
+5. Apply the filterbank to the power spectrogram to create a Mel spectrogram.
+6. Convert to decibel (dB) scale:
+   \[
+   \text{Mel Spectrogram (dB)} = 10 \cdot \log_{10}(\text{Mel Spectrogram} + 1e-7)
+   \]
+7. Visualize and save the spectrogram using a heatmap.
+
+---
+
+## Example Usage
 
 ```julia
 # Generate a Mel spectrogram for an audio file
