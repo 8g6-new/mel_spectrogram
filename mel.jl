@@ -14,7 +14,6 @@ function create_mel_spectrogram(input_path::String, output_path::String)
 
     num_mels = 512
 
-    # Generate Mel filterbank
     mel_bank = mel_filterbank(num_mels, window_length, sampling_frequency)
 
     power_spectrogram = mag .^ 2
