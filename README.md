@@ -55,11 +55,11 @@ Generate and apply a window function to minimize spectral leakage.
 - `window_values`: An array containing the window's values.
 
 #### Supported Windows:
-1. **Hann**: $$ \( 0.5 \cdot (1 - \cos(\frac{2\pi n}{N-1})) \ ) $$
-2. **Hamming**: \( 0.54 - 0.46 \cdot \cos(\frac{2\pi n}{N-1}) \)
-3. **Blackman**: \( 0.42 - 0.5 \cdot \cos(\frac{2\pi n}{N-1}) + 0.08 \cdot \cos(\frac{4\pi n}{N-1}) \)
-4. **Gaussian**: \( e^{-\frac{1}{2} \left(\frac{n-N/2}{\sigma \cdot N/2}\right)^2} \)
-<img src="https://render.githubusercontent.com/render/math?math=e^{i \pi} = -1">
+1. **Hann**: $$ ![image](https://github.com/user-attachments/assets/55d3dfb4-1f7a-4ffe-bf27-a95f72e89b46)
+2. **Hamming**: ![image](https://github.com/user-attachments/assets/18b4c77f-6627-4d01-a5dc-295f7b54c7ad)
+3. **Blackman**: ![image](https://github.com/user-attachments/assets/fb9e9178-9287-4d16-822a-04af8148fb67)
+4. **Gaussian**: ![image](https://github.com/user-attachments/assets/af244b5a-4506-4103-bdc7-5ca8bffba618)
+
 ---
 
 ### 3. `stft`
