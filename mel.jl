@@ -42,5 +42,4 @@ function create_mel_spectrogram(input_path::String, output_path::String)
     savefig(plt, "./ouput.png")
 end
 
-# Call the function with your input and output paths
 create_mel_spectrogram("./sep/test/Black Woodpecker/0.wav_1.wav", "./output_mel_spectrogram.png")
